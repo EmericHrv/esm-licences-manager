@@ -15,15 +15,6 @@ services:
     networks:
       - backend
 
-  mongo:
-    image: arm32v7/mongo
-    container_name: mongo-licences-manager
-    restart: always
-    networks:
-      - backend
-    volumes:
-      - mongo-data:/data/db
-
   backend:
     build:
       context: ./backend
