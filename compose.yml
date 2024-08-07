@@ -1,0 +1,73 @@
+version: '3'
+services:
+  caddy:
+    image: caddy
+    container_name: caddy-licences-manager
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    networks:
+      - backend
+
+  mongo:
+    image: mongo
+    container_name: mongo-licences-manager
+    restart: unless-stopped
+    networks:
+      - backend
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend-licences-manager
+    restart: unless-stopped
+    networks:
+      - backend
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/licenceManagerDB
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend-licences-manager
+    restart: unless-stopped
+    networks:
+      - backend
+    ports:
+      - "8080:80"
+
+  dynhost:
+    image: wojteek/dynhost:latest
+    command:
+      [
+        "--timer=15m",
+        "ovh",
+        "--auth-username=esmorannes.com-esm",
+        "--auth-password=Ww#5kVvg@L8VLZMQDhz5K6hF",
+        "--hostname=licences-manager.esmorannes.com"
+      ]
+    container_name: dynhost-licences-manager
+    restart: unless-stopped
+    volumes:
+      - ./data.json:/app/data.json:rw
+
+volumes:
+  mongo-data:
+
+
+networks:
+  backend:
+    driver: bridge

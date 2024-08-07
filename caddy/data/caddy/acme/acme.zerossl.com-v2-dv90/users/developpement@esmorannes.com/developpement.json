@@ -1,0 +1,14 @@
+{
+	"status": "valid",
+	"contact": [
+		"mailto:developpement@esmorannes.com"
+	],
+	"termsOfServiceAgreed": true,
+	"externalAccountBinding": {
+		"protected": "eyJhbGciOiJIUzI1NiIsImtpZCI6IkFSLUZuOUlSWnlVOXlsNWNoVXQ2SUEiLCJ1cmwiOiJodHRwczovL2FjbWUuemVyb3NzbC5jb20vdjIvRFY5MC9uZXdBY2NvdW50In0",
+		"payload": "eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6Im9hWjBIeDhfa09BdWpyY2ZleWhJQjZGcS1vT0ZDNFN1amNJLXBwd1lMQTAiLCJ5IjoiSm8yVlRkbmZtSWJQc0RpdU5TN0pfQmMxd0JYU1hZQkJldVFDU1NLaDAyMCJ9",
+		"signature": "sdP9p9qIiLxd7-Wv_hdAHg8lHGEtY1Ccx8WcGauRR_E"
+	},
+	"orders": "https://acme.zerossl.com/v2/DV90/account/AR-Fn9IRZyU9yl5chUt6IA/orders",
+	"location": "https://acme.zerossl.com/v2/DV90/account/AR-Fn9IRZyU9yl5chUt6IA"
+}
