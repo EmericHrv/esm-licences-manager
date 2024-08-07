@@ -1,7 +1,7 @@
 version: '3'
 services:
   caddy:
-    image: caddy
+    image: arm32v7/caddy # Assurez-vous que cette image est disponible pour ARM
     container_name: caddy-licences-manager
     restart: always
     cap_add:
@@ -17,7 +17,7 @@ services:
       - backend
 
   mongo:
-    image: mongo
+    image: arm32v7/mongo
     container_name: mongo-licences-manager
     restart: always
     networks:
@@ -50,7 +50,7 @@ services:
       - "8080:80"
 
   dynhost:
-    image: wojteek/dynhost:latest
+    image: wojteek/dynhost:latest # Vérifiez la compatibilité ARM
     command:
       [
         "--timer=15m",
@@ -66,7 +66,6 @@ services:
 
 volumes:
   mongo-data:
-
 
 networks:
   backend:
