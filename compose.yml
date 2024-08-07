@@ -1,6 +1,7 @@
+version: '3'
 services:
   caddy:
-    image: arm32v7/caddy
+    image: caddy
     container_name: caddy-licences-manager
     restart: always
     cap_add:
@@ -15,6 +16,15 @@ services:
     networks:
       - backend
 
+  mongo:
+    image: mongo
+    container_name: mongo-licences-manager
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - mongo-data:/data/db
+
   backend:
     build:
       context: ./backend
@@ -24,6 +34,8 @@ services:
       - backend
     environment:
       - MONGO_URL=mongodb://mongo:27017/licenceManagerDB
+    depends_on:
+      - mongo
     ports:
       - "3000:3000"
 
@@ -54,6 +66,7 @@ services:
 
 volumes:
   mongo-data:
+
 
 networks:
   backend:
