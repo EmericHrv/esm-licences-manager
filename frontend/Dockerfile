@@ -1,5 +1,5 @@
-# Utiliser une image node officielle comme image de base compatible ARM
-FROM arm32v7/node:21.4.0-alpine AS build
+# Utiliser une image node officielle comme image de base
+FROM node:21.4.0-alpine AS build
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Utiliser une image de serveur web pour servir les fichiers statiques
-FROM arm32v7/nginx:alpine
+FROM nginx:alpine
 
 # Copier le fichier de configuration nginx personnalisé
 COPY nginx.conf /etc/nginx/conf.d/default.conf
