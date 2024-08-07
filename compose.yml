@@ -3,7 +3,7 @@ services:
   caddy:
     image: caddy
     container_name: caddy-licences-manager
-    restart: unless-stopped
+    restart: always
     cap_add:
       - NET_ADMIN
     ports:
@@ -19,7 +19,7 @@ services:
   mongo:
     image: mongo
     container_name: mongo-licences-manager
-    restart: unless-stopped
+    restart: always
     networks:
       - backend
     volumes:
@@ -29,7 +29,7 @@ services:
     build:
       context: ./backend
     container_name: backend-licences-manager
-    restart: unless-stopped
+    restart: always
     networks:
       - backend
     environment:
@@ -43,7 +43,7 @@ services:
     build:
       context: ./frontend
     container_name: frontend-licences-manager
-    restart: unless-stopped
+    restart: always
     networks:
       - backend
     ports:
@@ -60,7 +60,7 @@ services:
         "--hostname=licences-manager.esmorannes.com"
       ]
     container_name: dynhost-licences-manager
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./data.json:/app/data.json:rw
 
