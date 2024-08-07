@@ -1,6 +1,6 @@
 services:
   caddy:
-    image: caddy
+    image: arm32v7/caddy
     container_name: caddy-licences-manager
     restart: always
     cap_add:
