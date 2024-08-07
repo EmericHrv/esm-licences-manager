@@ -24,8 +24,6 @@ services:
       - backend
     environment:
       - MONGO_URL=mongodb://mongo:27017/licenceManagerDB
-    depends_on:
-      - mongo
     ports:
       - "3000:3000"
 
