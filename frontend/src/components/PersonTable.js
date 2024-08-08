@@ -124,7 +124,7 @@ const PersonTable = ({ filteredData, fetchData, handleSearch, searchTerm, showNo
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-black">
                                             Mode de règlement
                                         </th>
-                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-black">
+                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-black whitespace-normal break-words">
                                             Libellé de règlement
                                         </th>
                                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-black">
@@ -173,7 +173,7 @@ const PersonTable = ({ filteredData, fetchData, handleSearch, searchTerm, showNo
                                                     )}
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{primaryLicence ? primaryLicence.mode_reglement : ''}</td>
-                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{primaryLicence ? primaryLicence.libelle_reglement : ''}</td>
+                                                <td className="whitespace-normal break-words px-3 py-4 text-sm text-gray-500">{primaryLicence ? primaryLicence.libelle_reglement : ''}</td>
                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                     {person.produit_licence ? (
                                                         <div className="flex items-center">
@@ -224,4 +224,3 @@ const PersonTable = ({ filteredData, fetchData, handleSearch, searchTerm, showNo
 };
 
 export default PersonTable;
-
