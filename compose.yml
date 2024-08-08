@@ -1,4 +1,3 @@
-version: '3'
 services:
   caddy:
     image: caddy
@@ -48,21 +47,6 @@ services:
       - backend
     ports:
       - "8080:80"
-
-  dynhost:
-    image: wojteek/dynhost:latest
-    command:
-      [
-        "--timer=15m",
-        "ovh",
-        "--auth-username=esmorannes.com-esm",
-        "--auth-password=Ww#5kVvg@L8VLZMQDhz5K6hF",
-        "--hostname=licences-manager.esmorannes.com"
-      ]
-    container_name: dynhost-licences-manager
-    restart: always
-    volumes:
-      - ./data.json:/app/data.json:rw
 
 volumes:
   mongo-data:
