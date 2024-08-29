@@ -1,20 +1,4 @@
 services:
-  caddy:
-    image: caddy
-    container_name: caddy-licences-manager
-    restart: always
-    cap_add:
-      - NET_ADMIN
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ./caddy/data:/data
-      - ./caddy/config:/config
-    networks:
-      - backend
-
   mongo:
     image: mongo
     container_name: mongo-licences-manager
@@ -30,7 +14,7 @@ services:
     container_name: backend-licences-manager
     restart: always
     networks:
-      - backend
+      - licences_manager_network
     environment:
       - MONGO_URL=mongodb://mongo:27017/licenceManagerDB
     depends_on:
@@ -44,14 +28,14 @@ services:
     container_name: frontend-licences-manager
     restart: always
     networks:
-      - backend
+      - licences_manager_network
     ports:
-      - "8080:80"
+      - "80:80"
 
 volumes:
   mongo-data:
 
 
 networks:
-  backend:
-    driver: bridge
+  licences_manager_network:
+    external: true
