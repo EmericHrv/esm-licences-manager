@@ -4,7 +4,10 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import ErrorMessage from '../components/ErrorMessage';
 import StockCards from '../components/StockCards';
+
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.licences-manager.esmorannes.com/api';
+
+const productOrder = ['maillot', 'short', 'chaussettes']; // Définir l'ordre des produits
 
 const StockPage = () => {
     const [data, setData] = useState([]);
@@ -39,6 +42,12 @@ const StockPage = () => {
         fetchData();
     };
 
+    const sortProductsByOrder = (products) => {
+        return products.sort((a, b) => {
+            return productOrder.indexOf(a.product) - productOrder.indexOf(b.product);
+        });
+    };
+
     return (
         <>
             <div className="min-h-full">
@@ -46,13 +55,24 @@ const StockPage = () => {
                 <main className="-mt-32">
                     <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
                         {error ? (
-
                             <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
                                 <ErrorMessage title="Erreur de Stock" messages={[error]} />
                             </div>
                         ) : (
                             data.map((clubData) => (
-                                <StockCards key={clubData.club} club={clubData.club} tailles={clubData.tailles} refreshData={refreshData} />
+                                <div key={clubData.club} className="mb-8">
+                                    {/* Trier les produits avant de les afficher */}
+                                    {sortProductsByOrder(clubData.produits).map((productData) => (
+                                        <div key={productData.product} className="mb-4">
+                                            <StockCards
+                                                club={clubData.club}
+                                                product={productData.product} // Ajout du produit
+                                                tailles={productData.tailles} // Tailles associées au produit
+                                                refreshData={refreshData}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
                             ))
                         )}
                     </div>

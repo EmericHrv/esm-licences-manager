@@ -5,6 +5,7 @@ const connectToDatabase = async (uri) => {
     await mongoose.connect(uri);
     console.log('Connecté à MongoDB');
     await initializeSchemas(); // Appeler initializeSchemas ici
+    await migratePersonSchema(); // Appeler migratePersonSchema ici
     await initializeStock(); // Appeler initializeStock ici
     await createAdminUser(); // Appeler createAdminUser ici
 };
@@ -41,6 +42,9 @@ const initializeSchemas = async () => {
             lieu_naissance: { type: String, required: true },
             produit_licence: { type: Boolean, default: false },
             produit_licence_taille: { type: String, default: '' },
+            produit_licence_taille_maillot: { type: String, default: '' },
+            produit_licence_taille_short: { type: String, default: '' },
+            produit_licence_taille_chaussettes: { type: String, default: '' },
             email: { type: String, required: true },
             numero_tel: { type: String, required: true },
             club: { type: String, required: true } // Ajout du champ Club
@@ -70,7 +74,8 @@ const initializeSchemas = async () => {
             club: { type: String, required: true },
             taille: { type: String, required: true },
             stockTotal: { type: Number, required: true },
-            stockRestant: { type: Number, required: true }
+            stockRestant: { type: Number, required: true },
+            product: { type: String, required: false } // Nouveau champ, facultatif pour ESM
         });
 
         stockSchema.methods.ajouterStockTotal = async function (quantite) {
@@ -110,33 +115,55 @@ const initializeSchemas = async () => {
         mongoose.model('Stock', stockSchema);
     }
 
+
     console.log('Les schémas et les modèles ont été vérifiés/créés.');
 };
 
 const initializeStock = async () => {
     const Stock = mongoose.model('Stock');
     const clubs = [
-        { name: 'ESM', sizes: ['S', 'M', 'L', 'XL', '2XL'] },
-        { name: 'GJ', sizes: ['XS', 'S', 'M', 'L', 'XL'] }
+        { name: 'ESM', sizes: ['S', 'M', 'L', 'XL', '2XL'], products: [null] },
+        { name: 'GJ', products: ['maillot', 'short', 'chaussettes'] }
     ];
 
     for (const club of clubs) {
-        for (const taille of club.sizes) {
-            const existingStock = await Stock.findOne({ club: club.name, taille });
-            if (!existingStock) {
-                const stock = new Stock({
-                    club: club.name,
-                    taille,
-                    stockTotal: 0,
-                    stockRestant: 0
-                });
-                await stock.save();
-                console.log(`Stock initial créé pour ${club.name} taille ${taille}`);
+        for (const product of club.products) {
+            let tailles;
+            if (club.name === 'ESM') {
+                // Utiliser les tailles spécifiées dans le tableau sizes pour ESM
+                tailles = club.sizes;
+            } else if (product === 'chaussettes') {
+                // Tailles spécifiques pour les chaussettes
+                tailles = ['27-30', '31-34', '35-38', '39-42', '43-46'];
+            } else {
+                // Tailles spécifiques pour les maillots et shorts
+                tailles = ['S', 'M', 'L', '164', '152', '140', '128', '116'];
+            }
+
+            for (const taille of tailles) {
+                // Cherche le stock existant basé sur le club et la taille, et maintenant le produit aussi pour GJ
+                const query = { club: club.name, taille };
+                if (product) query.product = product;
+
+                const existingStock = await Stock.findOne(query);
+                if (!existingStock) {
+                    const stock = new Stock({
+                        club: club.name,
+                        taille,
+                        stockTotal: 0,
+                        stockRestant: 0,
+                        product: product || undefined // Le champ product sera défini uniquement pour GJ
+                    });
+                    await stock.save();
+                    console.log(`Stock initial créé pour ${club.name} ${product ? `(${product})` : ''} taille ${taille}`);
+                }
             }
         }
     }
     console.log('Les stocks initiaux ont été créés.');
 };
+
+
 
 const createAdminUser = async () => {
     const User = mongoose.model('User');
@@ -155,6 +182,47 @@ const createAdminUser = async () => {
         console.log('Utilisateur admin existe déjà.');
     }
 };
+
+const migratePersonSchema = async () => {
+    const Person = mongoose.model('Person');
+
+    console.log("Démarrage de la migration du schéma 'Person'...");
+
+    // Vérifiez et ajoutez les champs manquants pour chaque document de la collection 'Person'
+    const personsToUpdate = await Person.find({
+        $or: [
+            { produit_licence_taille_maillot: { $exists: false } },
+            { produit_licence_taille_short: { $exists: false } },
+            { produit_licence_taille_chaussettes: { $exists: false } }
+        ]
+    });
+
+    if (personsToUpdate.length === 0) {
+        console.log("Aucun document à migrer.");
+        return;
+    }
+
+    for (const person of personsToUpdate) {
+        let updateData = {};
+
+        if (!person.produit_licence_taille_maillot) {
+            updateData.produit_licence_taille_maillot = '';
+        }
+        if (!person.produit_licence_taille_short) {
+            updateData.produit_licence_taille_short = '';
+        }
+        if (!person.produit_licence_taille_chaussettes) {
+            updateData.produit_licence_taille_chaussettes = '';
+        }
+
+        // Mettez à jour le document si nécessaire
+        await Person.updateOne({ _id: person._id }, { $set: updateData });
+        console.log(`Document Person mis à jour: ${person._id}`);
+    }
+
+    console.log('Migration du schéma "Person" terminée.');
+};
+
 
 const getUserModel = () => mongoose.model('User');
 const getPersonModel = () => mongoose.model('Person');

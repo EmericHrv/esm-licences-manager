@@ -1,12 +1,11 @@
-// components/StockCards.js
 import React, { useState } from 'react';
 import { CubeIcon } from '@heroicons/react/20/solid';
 import ManageStockModal from './ManageStockModal';
 import Notification from './Notification';
 
-const order = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+const sizeOrder = ['27-30', '31-34', '35-38', '39-42', '43-46', '116', '128', '140', '152', '164', 'S', 'M', 'L', 'XL', '2XL'];
 
-const StockCards = ({ club, tailles, refreshData }) => {
+const StockCards = ({ club, product, tailles, refreshData }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showNotification, setShowNotification] = useState(false);
     const [notification, setNotification] = useState({ type: 'info', title: '', message: '' });
@@ -19,14 +18,28 @@ const StockCards = ({ club, tailles, refreshData }) => {
         setIsModalOpen(false);
     };
 
+    // Trier les tailles selon l'ordre défini
     const sortedTailles = tailles.sort((a, b) => {
-        return order.indexOf(a.taille) - order.indexOf(b.taille);
+        return sizeOrder.indexOf(a.taille) - sizeOrder.indexOf(b.taille);
     });
+
+    const displayClubProduct = (club, product) => {
+        if (product) {
+            // Mettre la première lettre de product en majuscule
+            const capitalizedProduct = product.charAt(0).toUpperCase() + product.slice(1);
+            return `${club} - ${capitalizedProduct}`;
+        } else {
+            return club;
+        }
+    };
 
     return (
         <div className="mb-8 rounded-lg bg-white px-5 py-6 shadow sm:px-6">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-base font-semibold leading-6 text-gray-900">{club}</h2>
+                {/* Affichage du club et du produit */}
+                <h2 className="text-base font-semibold leading-6 text-gray-900">
+                    {displayClubProduct(club, product)}
+                </h2>
                 <button
                     type="button"
                     onClick={handleManageStock}
@@ -37,13 +50,16 @@ const StockCards = ({ club, tailles, refreshData }) => {
                 </button>
             </div>
             <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+                {/* Affichage des tailles */}
                 {sortedTailles.map((taille) => {
                     const percentage = (taille.stockRestant / taille.stockTotal) * 100;
                     const progressBarColor = taille.stockRestant === 0 ? 'bg-red-100' : 'bg-primary';
                     return (
                         <div key={taille.taille} className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                             <dt className="truncate text-sm font-medium text-gray-500">Taille: {taille.taille}</dt>
-                            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{taille.stockRestant}/{taille.stockTotal}</dd>
+                            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                                {taille.stockRestant}/{taille.stockTotal}
+                            </dd>
                             <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                                 <div className={`${progressBarColor} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div>
                             </div>
@@ -55,9 +71,11 @@ const StockCards = ({ club, tailles, refreshData }) => {
                     );
                 })}
             </dl>
+
             {isModalOpen && (
                 <ManageStockModal
                     club={club}
+                    product={product} // Passer le produit au modal
                     tailles={tailles}
                     closeModal={closeModal}
                     refreshData={refreshData}
@@ -68,6 +86,7 @@ const StockCards = ({ club, tailles, refreshData }) => {
                     }}
                 />
             )}
+
             <Notification
                 show={showNotification}
                 type={notification.type}

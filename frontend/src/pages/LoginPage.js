@@ -3,6 +3,7 @@ import logo from '../assets/logo.png';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.licences-manager.esmorannes.com/api';
 
 const LoginPage = () => {
+    console.log('API_BASE_URL:', API_BASE_URL);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');

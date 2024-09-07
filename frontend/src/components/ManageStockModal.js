@@ -4,7 +4,7 @@ import { PencilIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.licences-manager.esmorannes.com/api';
 
-const ManageStockModal = ({ club, tailles, closeModal, refreshData, setNotification }) => {
+const ManageStockModal = ({ club, product, tailles, closeModal, refreshData, setNotification }) => {
     const [selectedTaille, setSelectedTaille] = useState(tailles[0].taille);
     const [totalQuantite, setTotalQuantite] = useState(0);
     const [restantQuantite, setRestantQuantite] = useState(0);
@@ -27,6 +27,7 @@ const ManageStockModal = ({ club, tailles, closeModal, refreshData, setNotificat
                 method: totalQuantite < 0 ? 'PUT' : 'POST',
                 body: {
                     club: club,
+                    product: product, // Ajouter product à la requête
                     taille: selectedTaille,
                     quantite: Math.abs(parseInt(totalQuantite, 10))
                 }
@@ -36,6 +37,7 @@ const ManageStockModal = ({ club, tailles, closeModal, refreshData, setNotificat
                 method: restantQuantite < 0 ? 'PUT' : 'POST',
                 body: {
                     club: club,
+                    product: product, // Ajouter product à la requête
                     taille: selectedTaille,
                     quantite: Math.abs(parseInt(restantQuantite, 10))
                 }

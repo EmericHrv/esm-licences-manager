@@ -177,7 +177,7 @@ const PersonTable = ({ filteredData, fetchData, handleSearch, searchTerm, showNo
                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                     {person.produit_licence ? (
                                                         <div className="flex items-center">
-                                                            <span className="inline-flex items-center rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700 mr-2">Remis ({person.produit_licence_taille})</span>
+                                                            <span className="inline-flex items-center rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700 mr-2">{person.produit_licence_taille ? `Remis (${person.produit_licence_taille})` : 'Remis'}</span>
                                                         </div>
                                                     ) : (
                                                         <div className="flex items-center">

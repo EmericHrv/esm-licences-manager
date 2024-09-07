@@ -1,9 +1,0 @@
-api.licences-manager.esmorannes.com {
-    reverse_proxy backend:3000
-    tls developpement@esmorannes.com
-}
-
-licences-manager.esmorannes.com {
-    reverse_proxy frontend:80
-    tls developpement@esmorannes.com
-}

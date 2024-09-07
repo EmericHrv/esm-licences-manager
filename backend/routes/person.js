@@ -171,7 +171,7 @@ router.get('/', async (req, res) => {
 // Nouvelle route pour mettre à jour produit_licence et produit_licence_taille
 router.put('/:numero_personne', async (req, res) => {
     const { numero_personne } = req.params;
-    const { produit_licence, produit_licence_taille } = req.body;
+    const { produit_licence, produit_licence_taille, produit_licence_taille_maillot, produit_licence_taille_short, produit_licence_taille_chaussettes } = req.body;
 
     try {
         let person = await Person.findOne({ numero_personne });
@@ -186,6 +186,18 @@ router.put('/:numero_personne', async (req, res) => {
 
         if (produit_licence_taille !== undefined) {
             person.produit_licence_taille = produit_licence_taille;
+        }
+
+        if (produit_licence_taille_maillot !== undefined) {
+            person.produit_licence_taille_maillot = produit_licence_taille_maillot;
+        }
+
+        if (produit_licence_taille_short !== undefined) {
+            person.produit_licence_taille_short = produit_licence_taille_short;
+        }
+
+        if (produit_licence_taille_chaussettes !== undefined) {
+            person.produit_licence_taille_chaussettes = produit_licence_taille_chaussettes;
         }
 
         await person.save();

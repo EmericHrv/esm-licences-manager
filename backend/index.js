@@ -1,7 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv');
 const { connectToDatabase } = require('./models/db');
 const routes = require('./routes'); // Import central routes
+
+// Charger les variables d'environnement
+dotenv.config();
+const { NODE_ENV } = process.env;
 
 const app = express();
 const port = 3000;
@@ -10,11 +15,17 @@ const port = 3000;
 app.use(express.json());
 
 // Middleware CORS
-app.use(cors({
-    origin: 'https://licences-manager.esmorannes.com',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+if (NODE_ENV === 'dev') {
+    console.log('Environnement de développement');
+    app.use(cors());
+} else {
+    console.log('Environnement de production');
+    app.use(cors({
+        origin: 'https://licences-manager.esmorannes.com',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+}
 
 const startServer = () => {
     // Utiliser les routes centralisées après l'initialisation des modèles
