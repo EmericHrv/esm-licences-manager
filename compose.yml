@@ -29,6 +29,8 @@ services:
     restart: always
     networks:
       - licences_manager_network
+    environment:
+      - REACT_APP_BACKEND_URL=https://api.licences-manager.esmorannes.com/api
     ports:
       - "8080:80"
 
