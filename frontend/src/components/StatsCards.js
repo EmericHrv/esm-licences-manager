@@ -7,10 +7,10 @@ const stats = [
     { name: 'Produits remis', statKey: 'produitsRemisCount' },
 ];
 
-const StatsCards = ({ statsData }) => {
+const StatsCards = ({ club, statsData }) => {
     return (
         <div>
-            <h3 className="text-base font-semibold leading-6 text-gray-900">Bilan des licences</h3>
+            <h3 className="text-base font-semibold leading-6 text-gray-900">Bilan des licences {club}</h3>
             <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map((item) => (
                     <div key={item.name} className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">

@@ -47,6 +47,8 @@ const initializeSchemas = async () => {
             produit_licence_taille_chaussettes: { type: String, default: '' },
             email: { type: String, required: true },
             numero_tel: { type: String, required: true },
+            nom_club: { type: String },
+            num_club: { type: String },
             club: { type: String, required: true } // Ajout du champ Club
         });
 

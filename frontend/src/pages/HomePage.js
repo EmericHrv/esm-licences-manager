@@ -12,7 +12,13 @@ const HomePage = () => {
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [statsData, setStatsData] = useState({
+    const [statsDataESM, setStatsDataESM] = useState({
+        personsCount: 0,
+        licencesCount: 0,
+        licencesNonPayeesCount: 0,
+        produitsRemisCount: 0,
+    });
+    const [statsDataGJ, setStatsDataGJ] = useState({
         personsCount: 0,
         licencesCount: 0,
         licencesNonPayeesCount: 0,
@@ -50,15 +56,23 @@ const HomePage = () => {
             }
 
             // Fetch stats data
-            const responseStats = await fetch(`${API_BASE_URL}/persons/stats`, {
+            const responseStatsESM = await fetch(`${API_BASE_URL}/persons/stats/ESM`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
 
-            if (responseStats.ok) {
-                const dataStats = await responseStats.json();
-                setStatsData(dataStats);
+            const responseStatsGJ = await fetch(`${API_BASE_URL}/persons/stats/GJ`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (responseStatsESM.ok && responseStatsGJ.ok) {
+                const dataStatsESM = await responseStatsESM.json();
+                const dataStatsGJ = await responseStatsGJ.json();
+                setStatsDataESM(dataStatsESM);
+                setStatsDataGJ(dataStatsGJ);
                 setStatsError('');
             } else {
                 setStatsError('Échec de la récupération des données statistiques');
@@ -97,7 +111,13 @@ const HomePage = () => {
                             {statsError ? (
                                 <ErrorMessage title="Erreur des Statistiques" messages={[statsError]} />
                             ) : (
-                                <StatsCards statsData={statsData} />
+                                <StatsCards club={'ES Morannes'} statsData={statsDataESM} />
+                            )}
+                            <div className="mt-6" />
+                            {statsError ? (
+                                <ErrorMessage title="Erreur des Statistiques" messages={[statsError]} />
+                            ) : (
+                                <StatsCards club={'GJ'} statsData={statsDataGJ} />
                             )}
                         </div>
                     </div>

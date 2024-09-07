@@ -150,6 +150,8 @@ const PersonTable = ({ filteredData, fetchData, handleSearch, searchTerm, showNo
                                             <tr key={person._id}>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-black sm:pl-6">
                                                     {`${person.nom} ${person.prenom}`}
+                                                    <br />
+                                                    <span className="text-xs text-gray-500">{person.nom_club}</span>
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                     {person.licences.length > 0 ? (

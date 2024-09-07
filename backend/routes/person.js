@@ -88,6 +88,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
                     lieu_naissance: parseString(row['Lieu de naissance']),
                     email: parseString(row['Email principal']),
                     numero_tel: parseString(row['Mobile personnel']),
+                    nom_club: parseString(row['Nom du club']),
+                    num_club: parseString(row['Numéro']),
                     club: club
                 });
 
@@ -100,6 +102,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
                 person.lieu_naissance = parseString(row['Lieu de naissance']);
                 person.email = parseString(row['Email principal']);
                 person.numero_tel = parseString(row['Mobile personnel']);
+                person.nom_club = parseString(row['Nom du club']);
+                person.num_club = parseString(row['Numéro']);
                 person.club = club;
                 await person.save();
             }
@@ -209,12 +213,31 @@ router.put('/:numero_personne', async (req, res) => {
 });
 
 // Nouvelle route pour connaitre le nombre de personnes et de licences ainsi que le nombre de licences non payées et de produits non remis
-router.get('/stats', async (req, res) => {
+router.get('/stats/ESM', async (req, res) => {
     try {
-        const personsCount = await Person.countDocuments();
-        const licencesCount = await Licence.countDocuments();
-        const licencesNonPayeesCount = await Licence.countDocuments({ etat_reglement: null });
-        const produitsRemisCount = await Person.countDocuments({ produit_licence: true });
+        const personsCount = await Person.countDocuments({ num_club: 522758 });
+        const licencesCount = await Licence.countDocuments({ person_id: { $in: await Person.find({ num_club: 522758 }).distinct('_id') } });
+        const licencesNonPayeesCount = await Licence.countDocuments({ etat_reglement: null, person_id: { $in: await Person.find({ num_club: 522758 }).distinct('_id') } });
+        const produitsRemisCount = await Person.countDocuments({ produit_licence: true, num_club: 522758 });
+
+        res.status(200).json({
+            personsCount,
+            licencesCount,
+            licencesNonPayeesCount,
+            produitsRemisCount
+        });
+    } catch (error) {
+        console.error('Erreur lors de la récupération des statistiques:', error);
+        res.status(500).send('Erreur lors de la récupération des statistiques.');
+    }
+});
+
+router.get('/stats/GJ', async (req, res) => {
+    try {
+        const personsCount = await Person.countDocuments({ club: 'GJ' });
+        const licencesCount = await Licence.countDocuments({ person_id: { $in: await Person.find({ club: 'GJ' }).distinct('_id') } });
+        const licencesNonPayeesCount = await Licence.countDocuments({ etat_reglement: null, person_id: { $in: await Person.find({ club: 'GJ' }).distinct('_id') } });
+        const produitsRemisCount = await Person.countDocuments({ produit_licence: true, club: 'GJ' });
 
         res.status(200).json({
             personsCount,
