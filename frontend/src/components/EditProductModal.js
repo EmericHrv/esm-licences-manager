@@ -277,11 +277,22 @@ const EditProductModal = ({ person, closeModal, showNotification }) => {
                                                 className="mt-1 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-black shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-yellow-300 sm:text-sm"
                                             >
                                                 <option value="Non-Remis">Non-Remis</option>
-                                                {taillesDisponibles.maillot.map((taille) => (
-                                                    <option key={taille.taille} value={taille.taille} disabled={taille.stockRestant === 0}>
-                                                        {taille.taille} {taille.stockRestant === 0 && '(indisponible)'}
-                                                    </option>
-                                                ))}
+                                                {taillesDisponibles.maillot.map((taille) => {
+                                                    const correspondanceAge = {
+                                                        '164': ' (13-14 ans)',
+                                                        '152': ' (11-12 ans)',
+                                                        '140': ' (9-10 ans)',
+                                                        '128': ' (7-8 ans)',
+                                                        '116': ' (5-6 ans)',
+                                                    };
+                                                    return (
+                                                        <option key={taille.taille} value={taille.taille} disabled={taille.stockRestant === 0}>
+                                                            {taille.taille}
+                                                            {correspondanceAge[taille.taille] || ''} {/* Affiche la correspondance d'âge si elle existe */}
+                                                            {taille.stockRestant === 0 && ' (indisponible)'}
+                                                        </option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
 
@@ -293,11 +304,22 @@ const EditProductModal = ({ person, closeModal, showNotification }) => {
                                                 className="mt-1 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-black shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-yellow-300 sm:text-sm"
                                             >
                                                 <option value="Non-Remis">Non-Remis</option>
-                                                {taillesDisponibles.short.map((taille) => (
-                                                    <option key={taille.taille} value={taille.taille} disabled={taille.stockRestant === 0}>
-                                                        {taille.taille} {taille.stockRestant === 0 && '(indisponible)'}
-                                                    </option>
-                                                ))}
+                                                {taillesDisponibles.short.map((taille) => {
+                                                    const correspondanceAge = {
+                                                        '164': ' (13-14 ans)',
+                                                        '152': ' (11-12 ans)',
+                                                        '140': ' (9-10 ans)',
+                                                        '128': ' (7-8 ans)',
+                                                        '116': ' (5-6 ans)',
+                                                    };
+                                                    return (
+                                                        <option key={taille.taille} value={taille.taille} disabled={taille.stockRestant === 0}>
+                                                            {taille.taille}
+                                                            {correspondanceAge[taille.taille] || ''} {/* Affiche la correspondance d'âge si elle existe */}
+                                                            {taille.stockRestant === 0 && ' (indisponible)'}
+                                                        </option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
 
