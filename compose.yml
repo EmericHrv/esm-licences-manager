@@ -17,6 +17,7 @@ services:
       - licences_manager_network
     environment:
       - MONGO_URL=mongodb://mongo:27017/licenceManagerDB
+      - JWT_SECRET=aS4&aW$93Ups4xGAMeDBECc%udzZK!x$#D5E4dbeUPPdb@4M&2Fj11gGDq3H
     depends_on:
       - mongo
     ports:
@@ -31,7 +32,6 @@ services:
       - licences_manager_network
     environment:
       - REACT_APP_BACKEND_URL=https://api.licences-manager.esmorannes.com/api
-      - JWT_SECRET=aS4&aW$93Ups4xGAMeDBECc%udzZK!x$#D5E4dbeUPPdb@4M&2Fj11gGDq3H
     ports:
       - "8080:80"
 
